@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8' />
+	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+	<meta name="description" content="Weather Radar" />
+
+<title>Weather Radar</title>
+</head>
+
+<body>
+
+<div id="weather_radar_wrapper" class="outer">
+	<style>
+	  #myProgress {
+		width: 100%;
+		background-color: lightgrey;
+	  }
+	  #myBar {
+		width: 1%;
+		height: 20px;
+		background-color: lightgreen;
+	  }
+	</style>
+	<link rel="stylesheet" href="css/leaflet.css" />
+	
+	<div id="map" style="width: 100%; height: 400px"></div>
+
+	<div id="myProgress">
+	  <div id="myBar" align="right"></div>
+	</div>
+	
+	<div class="controls">
+		<button onclick="toggleAnimation()" id="toggleButton">Stop</button>
+		<input type="range" min="100" max="1000" value="700" id="speedRange">
+		<text id="theTime">
+	</div>
+	<script language="javascript" src="js/leaflet.js"></script>
+	<script language="javascript" src="js/weather_radar.js"></script>
+</div>
+
+	
+</body>
+</html>
