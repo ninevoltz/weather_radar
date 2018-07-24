@@ -45,7 +45,7 @@
 	
 	// get new radar data every five minutes
 	updateInterval = setInterval(updateLayers, 300000);
-	// animate the radar data one frame per second
+	// animate the radar data with speed set by slider
 	animateInterval = setInterval(drawCurrentLayer, animateSpeed);
 	
 	// toggle animation on and off with a button
@@ -75,7 +75,7 @@
 		
 		for (var i = 0; i < 13; i++) {
 			radar[i].setParams({time: formatDateTime(i)});  // set the new layer times
-			radar[i].redraw();
+			radar[i].redraw(); // redraw the layer
  		}
 		
 		animateInterval = setInterval(drawCurrentLayer, animateSpeed); //start animation
@@ -107,11 +107,11 @@
 		layersLoaded--;
 	}
 	
-	// count the layers as they finish loading
+	// show loading progress
 	function loadProgress() {
 		document.getElementById("theTime").innerHTML = "Updating radar layers..."
 		progressBar.style.width = ((layersLoaded / 13) * 100) + '%'; 
-        progressBar.innerHTML = Math.floor((layersLoaded / 13) * 100)  + '%';
+        	progressBar.innerHTML = Math.floor((layersLoaded / 13) * 100)  + '%';
 	}
 	
 	// show the current radar layer
@@ -145,10 +145,9 @@
 		var month = pad(dateNow.getUTCMonth() + 1);
 		var day = pad(dateNow.getUTCDate());
 		var hrs = pad(dateNow.getUTCHours());
-		var mins = pad(Math.floor(dateNow.getUTCMinutes() / 5) * 5);
-		var secs = pad(dateNow.getUTCSeconds());
-		layerTime[i] = hrs + ":" + mins + " " + month + "/" + day + "/" + year;
-		dn = year + "-" + month + "-" + day + "T" + hrs + ":" + mins;
-		//console.log("Getting radar for time: " + dn);
+		var mins = pad(Math.floor(dateNow.getUTCMinutes() / 5) * 5); // mesonet WMS expects requests on 5 minute intervals
+
+		layerTime[i] = hrs + ":" + mins + " " + month + "/" + day + "/" + year; // time to display in window
+		dn = year + "-" + month + "-" + day + "T" + hrs + ":" + mins; // time formatted to send to mesonet
 		return dn;
 	}
