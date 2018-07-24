@@ -16,10 +16,14 @@
 	var layerTime = [];
 	
 	// OpenStreetMaps
-	var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-		transparent: false
-	});
+	//var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+	//	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+	//	transparent: false
+	//});
+	
+	// ESRI map with satellite imagery
+	var esri_imagery = L.esri.basemapLayer('Imagery');
+	var esri_labels = L.esri.basemapLayer('ImageryLabels');
 	
 	var homeIcon = L.icon({
 		iconUrl: 'images/marker-icon.png',
@@ -35,8 +39,14 @@
 	var home = L.marker([41.276265, -83.650922], {icon: homeIcon});
 	
 	// add the OpenStreetMaps map layer
-	osm.addTo(Map);
-	osm.setZIndex(1);
+	//osm.addTo(Map);
+	//osm.setZIndex(1);
+	
+	// add ESRI map layer
+	esri_imagery.addTo(Map);
+	esri_labels.addTo(Map);
+	esri_imagery.setZIndex(1);
+	esri_labels.setZIndex(1);
 	
 	// add a pin at home
 	home.addTo(Map).bindPopup("Home Sweet Home");
