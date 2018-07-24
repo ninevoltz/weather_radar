@@ -140,7 +140,7 @@
 		}
 	}
 
-	// pad time numbers with a leading zero
+	// pad time digits with a leading zero
 	function pad(num) {
 		var s = num + "";
 		while (s.length < 2) s = "0" + s;
