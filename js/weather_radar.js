@@ -44,8 +44,24 @@
 	
 	// add a pin at home
 	home.addTo(Map).bindPopup("Home Sweet Home");
+	
+	Map.locate({setView: true, maxZoom: 6});
+	
 	// initialize the radar layers
 	initLayers();
+	
+	function onLocationFound(e) {
+		var radius = e.accuracy / 2;
+		var currentLocationPin = L.marker(e.latlng, {icon: homeIcon}).addTo(Map).bindPopup("You are here.");
+		var currentLocationRadius = L.circle(e.latlng, radius).addTo(Map);
+	}
+
+	function onLocationError(e) {
+		alert(e.message);
+	}
+
+	Map.on('locationfound', onLocationFound);
+	Map.on('locationerror', onLocationError);
 	
 	// get new radar data every five minutes
 	updateInterval = setInterval(updateLayers, 300000);

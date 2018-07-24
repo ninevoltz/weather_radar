@@ -1,7 +1,12 @@
 	var section = document.querySelector('section');
 	var requestURL = 'https://forecast.weather.gov/MapClick.php?lat=41.276265&lon=-83.650922&FcstType=json'
 	var request = new XMLHttpRequest();
-
+	var myWeather = document.createElement('article');
+	var wxHeader = document.createElement('h2');
+	var wxCond = document.createElement('p');
+	var forecastTable = document.createElement('table');
+	var hazard = document.createElement('a');
+		
 	function updateForecast() {
 		request.open('GET', requestURL);
 		request.responseType = 'json';
@@ -13,6 +18,50 @@
 		showWeather(weather);
 	}
 	
+	function createDocument() {
+		
+		for (var i = 0; i < 13; i++) {
+			var tRow = document.createElement('tr');
+			tRow.setAttribute('id', 'row' + i);
+			forecastTable.appendChild(tRow);
+			
+			var tDiv1 = document.createElement('td');
+			tDiv1.setAttribute('id', 'picCol' + i);
+			tRow.appendChild(tDiv1);
+			
+			var iconPic = document.createElement('img');
+			iconPic.setAttribute('src', "images/layers-2x.png");
+			iconPic.setAttribute('id', 'icon' + i);
+			tDiv1.appendChild(iconPic);
+			
+			var tDiv2 = document.createElement('td');
+			tDiv2.setAttribute('id', 'textCol' + i);
+			tRow.appendChild(tDiv2);
+			
+			var day = document.createElement('p');
+			day.setAttribute('id', 'day' + i);
+			day.textContent = "short info";
+			tDiv2.appendChild(day);
+
+			var longDesc = document.createElement('p');
+			longDesc.setAttribute('id', 'desc' + i);
+			longDesc.textContent = "long description";
+			tDiv2.appendChild(longDesc);
+
+		}	
+		
+		forecastTable.setAttribute('id', 'fcTable');
+		forecastTable.setAttribute('cellpadding', '10');
+		
+		myWeather.appendChild(wxHeader);
+		myWeather.appendChild(wxCond);
+		myWeather.appendChild(hazard);
+		myWeather.appendChild(forecastTable);
+		
+		section.appendChild(myWeather);
+	}
+	
+	createDocument();
 	updateForecast();
 	
 	// get new forecast data every five minutes
@@ -28,13 +77,7 @@
 			'<!doctype html><body>' + data.hazardUrl,
 			'text/html');
 		var decodedURL = dom.body.textContent;
-		
-		var myWeather = document.createElement('article');
-		var wxHeader = document.createElement('h2');
-		var wxCond = document.createElement('p');
-		var forecastTable = document.createElement('table');
-		var hazard = document.createElement('a');
-		
+	
 		hazard.textContent = data.hazard;
 		hazard.setAttribute('href', decodedURL);
 		hazard.setAttribute('target', '_blank');
@@ -44,38 +87,10 @@
 		+ weather.Dewp + '°F | Relative Humidity ' + weather.Relh + '% | Visibility ' + weather.Visibility
 		+ ' miles | Barometer ' + weather.SLP + ' in | Winds ' + weather.Winds + ' mph |';
 		
-		forecastTable.setAttribute('id', 'fcTable');
-		forecastTable.setAttribute('cellpadding', '10');
-		
 		for (var i = 0; i < 13; i++) {
-			var tRow = document.createElement('tr');
-			forecastTable.appendChild(tRow);
-			
-			var tDiv1 = document.createElement('td');
-			tRow.appendChild(tDiv1);
-			
-			var iconPic = document.createElement('img');
-			iconPic.setAttribute('src', data.iconLink[i]);
-			tDiv1.appendChild(iconPic);
-			
-			var tDiv2 = document.createElement('td');
-			tRow.appendChild(tDiv2);
-			
-			var day = document.createElement('p');
-			day.textContent = times.startPeriodName[i] + ', ' + data.weather[i] + ', ' + times.tempLabel[i] + ' ' + data.temperature[i] + '°F';
-			tDiv2.appendChild(day);
-
-			var longDesc = document.createElement('p');
-			longDesc.textContent = data.text[i];
-			tDiv2.appendChild(longDesc);
-
+			document.getElementById("icon" + i).setAttribute("src", data.iconLink[i]);
+			document.getElementById("day" + i).innerHTML = times.startPeriodName[i] + ', ' + data.weather[i] + ', ' + times.tempLabel[i] + ' ' + data.temperature[i] + '°F';
+			document.getElementById("desc" + i).innerHTML = data.text[i];
 		}
-
-		myWeather.appendChild(wxHeader);
-		myWeather.appendChild(wxCond);
-		myWeather.appendChild(hazard);
-		myWeather.appendChild(forecastTable);
-		
-		section.appendChild(myWeather);
 
 	}					
