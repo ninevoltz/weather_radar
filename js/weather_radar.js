@@ -3,7 +3,7 @@
 	var TIME_STEP = 20; // time to step in minutes
 	var ANIMATE = true;
 	var slider = document.getElementById("speedRange");
-	var progressBar = document.getElementById("myBar");
+	var progressBar = document.getElementById("progressBarVal");
 	var updateInterval;
 	var animateInterval;
 	var animateSpeed = 300;
@@ -16,10 +16,10 @@
 	var layerTime = [];
 	
 	// OpenStreetMaps
-	//var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-	//	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-	//	transparent: false
-	//});
+	var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+		transparent: false
+	});
 	
 	// ESRI map with satellite imagery
 	var esri_imagery = L.esri.basemapLayer('Imagery');
@@ -39,14 +39,8 @@
 	var home = L.marker([41.276265, -83.650922], {icon: homeIcon});
 	
 	// add the OpenStreetMaps map layer
-	//osm.addTo(Map);
-	//osm.setZIndex(1);
-	
-	// add ESRI map layer
-	esri_imagery.addTo(Map);
-	esri_labels.addTo(Map);
-	esri_imagery.setZIndex(1);
-	esri_labels.setZIndex(1);
+	osm.addTo(Map);
+	osm.setZIndex(1);
 	
 	// add a pin at home
 	home.addTo(Map).bindPopup("Home Sweet Home");
@@ -68,6 +62,29 @@
 			ANIMATE = true;
 			animateInterval = setInterval(drawCurrentLayer, animateSpeed);
 			document.getElementById("toggleButton").innerHTML = "Stop";
+		}
+	}
+	
+	function selectMap() {
+		var x = document.getElementById("mapType");
+		var i = x.selectedIndex;
+		var mt = x.options[i].value;
+		
+		switch (mt) {
+			case ("OSM"):
+				osm.addTo(Map);
+				osm.setZIndex(1);
+				esri_imagery.removeFrom(Map);
+				esri_labels.removeFrom(Map);
+			break;				
+			case ("ESRI"):
+				// add ESRI map layer
+				esri_imagery.addTo(Map);
+				esri_labels.addTo(Map);
+				esri_imagery.setZIndex(1);
+				esri_labels.setZIndex(1);
+				osm.removeFrom(Map);
+			break;
 		}
 	}
 	
@@ -121,7 +138,7 @@
 	function loadProgress() {
 		document.getElementById("theTime").innerHTML = "Updating radar layers..."
 		progressBar.style.width = ((layersLoaded / 13) * 100) + '%'; 
-        	progressBar.innerHTML = Math.floor((layersLoaded / 13) * 100)  + '%';
+		progressBar.innerHTML = Math.floor((layersLoaded / 13) * 100)  + '%';
 	}
 	
 	// show the current radar layer
