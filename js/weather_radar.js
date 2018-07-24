@@ -113,6 +113,7 @@
 		document.getElementById("theTime").innerHTML = "Loading radar layers..."
 		for (var i = 0; i < 13; i++) {
 			radar[i] = L.tileLayer.wms('http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi', {
+				attribution: '&copy; <a href="https://mesonet.agron.iastate.edu">Iowa State University</a> of Science and Technology',
 				layers: 'nexrad-n0r-wmst',
 				transparent: true,
 				format: 'image/png',
