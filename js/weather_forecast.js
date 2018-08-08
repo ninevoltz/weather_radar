@@ -6,7 +6,9 @@
 	var wxCond = document.createElement('p');
 	var forecastTable = document.createElement('table');
 	var hazard = document.createElement('a');
-		
+	var audioIndex = 0;
+	var speechText = [];
+	
 	function updateForecast() {
 		request.open('GET', requestURL);
 		request.responseType = 'json';
@@ -72,12 +74,12 @@
 		var data = jsonObj['data'];
 		var times = jsonObj['time'];
 		var parser = new DOMParser;
-	
+		
 		var dom = parser.parseFromString(
 			'<!doctype html><body>' + data.hazardUrl,
 			'text/html');
 		var decodedURL = dom.body.textContent;
-	
+		
 		hazard.textContent = data.hazard;
 		hazard.setAttribute('href', decodedURL);
 		hazard.setAttribute('target', '_blank');
@@ -88,9 +90,31 @@
 		+ ' miles | Barometer ' + weather.SLP + ' in | Winds ' + weather.Winds + ' mph |';
 		
 		for (var i = 0; i < 13; i++) {
+			
 			document.getElementById("icon" + i).setAttribute("src", data.iconLink[i]);
+
+			( function(index) {document.getElementById("icon" + index).onclick = function(){speakForecast(data.text[index]);} } )(i);
+			
 			document.getElementById("day" + i).innerHTML = times.startPeriodName[i] + ', ' + data.weather[i] + ', ' + times.tempLabel[i] + ' ' + data.temperature[i] + '°F';
+			
 			document.getElementById("desc" + i).innerHTML = data.text[i];
 		}
 
 	}					
+
+	function speakForecast(say) {
+		speechText = say.split(".");
+		audioIndex = 0;
+		playSpeech();
+
+	}
+	
+	function playSpeech() {
+		if (audioIndex < speechText.length - 1) {
+			var audio = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q=' + escape(speechText[audioIndex]) + '%20');
+			audio.onended = function(){audioIndex++; playSpeech();};
+			audio.play();
+		}
+	}
+
+	
