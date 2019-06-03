@@ -170,19 +170,16 @@ function formatDateTime(i) {
 	var dn = "";
 	var dateNow = new Date(Date.now() - ((START_TIME - (i * TIME_STEP)) * MS_PER_MINUTE));
 	var UTCoffset = (dateNow.getTimezoneOffset() / 60);
-	var year = dateNow.getFullYear();
-	var month = pad(dateNow.getMonth() + 1);
-	var day = pad(dateNow.getDate());
-	var hrs = pad(dateNow.getHours());
-	var utc_hrs = parseInt(hrs, 10) + UTCoffset;
-		if (utc_hrs > 23) {
-		utc_hrs = parseInt(utc_hrs, 10) - 24;
-		day = parseInt(day, 10) + 1;
-	}
-	var mins = pad(Math.floor(dateNow.getMinutes() / 5) * 5); // mesonet WMS expects requests on 5 minute intervals
+	var year = dateNow.getUTCFullYear();
+	var month = pad(dateNow.getUTCMonth() + 1);
+	var day = pad(dateNow.getUTCDate());
+	var hrs = pad(dateNow.getUTCHours());
+	var local_hrs = pad(dateNow.getHours());
 
-	layerTime[i] = hrs + ":" + mins + " " + month + "/" + day + "/" + year; // time to display in window
-	dn = year + "-" + month + "-" + day + "T" + utc_hrs + ":" + mins; // time formatted to send to mesonet
+	var mins = pad(Math.floor(dateNow.getUTCMinutes() / 5) * 5); // mesonet WMS expects requests on 5 minute intervals
+
+	layerTime[i] = local_hrs + ":" + mins + " " + month + "/" + day + "/" + year; // time to display in window
+	dn = year + "-" + month + "-" + day + "T" + hrs + ":" + mins; // time formatted to send to mesonet. mesonet uses UTC time
 
 	return dn;
 }
