@@ -175,6 +175,7 @@ function formatDateTime(i) {
 	var day = pad(dateNow.getDate());
 	var hrs = pad(dateNow.getHours());
 	var utc_hrs = parseInt(hrs, 10) + UTCoffset;
+	if (utc_hrs > 23) utc_hrs = parseInt(utc_hrs, 10) - 24;
 	var mins = pad(Math.floor(dateNow.getMinutes() / 5) * 5); // mesonet WMS expects requests on 5 minute intervals
 
 	layerTime[i] = hrs + ":" + mins + " " + month + "/" + day + "/" + year; // time to display in window
